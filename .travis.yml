@@ -32,8 +32,8 @@ before_install:
  - echo y | sdkmanager "platforms;android-26"
  - echo y | sdkmanager "extras;android;m2repository"
  - echo y | sdkmanager "extras;google;m2repository"
- - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
- - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
+ - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.0-alpha7"
+ - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.0-alpha7"
   
 install:
     - >
