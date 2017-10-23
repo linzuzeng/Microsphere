@@ -1,6 +1,4 @@
 language: android
-jdk:
-  - oraclejdk8
 env:
     global:
         - NDK_VERSION=r15b
@@ -14,8 +12,17 @@ android:
    - build-tools-26.0.0
    - extra-android-m2repository
    - extra-google-m2repository
+   - extra-android-support
+   - extra-google-google_play_services
+  licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+jdk:
+  - oraclejdk8
 before_install:
  - chmod +x gradlew
+
 install:
     - >
       if [ ! -d "$ANDROID_NDK_HOME" ]; then
