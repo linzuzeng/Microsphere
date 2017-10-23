@@ -19,14 +19,23 @@
         android:scrollbarSize="20dp"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
-        android:text="Hello World!"
+        android:text="Microsphere"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
+    <com.github.mikephil.charting.charts.PieChart
+        android:background="@color/colorPrimary"
         android:id="@+id/result_text"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="0dp"
+        android:layout_width="0dp"  />
+    <TextView
+        android:id="@+id/result_text2"
 
         android:background="@color/colorPrimary"
 
@@ -38,5 +47,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="0dp"
+        android:layout_width="0dp" />
 </android.support.constraint.ConstraintLayout>
