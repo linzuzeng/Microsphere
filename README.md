@@ -8,7 +8,10 @@ A simple microsphere detector that runs on Android.
 
 Copyright (C) 2017 Zuzeng Lin
 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation.
+
+Demonstration
+---------
+[![Demonstration video on youtube](https://img.youtube.com/vi/RfW5BJC2Gps/0.jpg)](https://www.youtube.com/watch?v=RfW5BJC2Gps)
 
 Credits
 ---------
