@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
             List<PieEntry> entries_double = new ArrayList<>();
             entries_double.add(new PieEntry(total_single_count,"Single beads"));
             entries_double.add(new PieEntry(total_double_count,"Dimers"));
-            PieDataSet dataset_double = new PieDataSet(entries_double, "Detection result");
+            PieDataSet dataset_double = new PieDataSet(entries_double, "");
 
             dataset_double.setColors(ColorTemplate.MATERIAL_COLORS);
             PieData pieData = new PieData(dataset_double);
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
             mChart.setDrawCenterText(true);
 
             mChart.setCenterText("Detection result");
-            mChart.setCenterTextSize(14f);
+            mChart.setCenterTextSize(17f);
             mChart.setCenterTextColor(Color.BLACK);
 
             mChart.setUsePercentValues(true);
@@ -291,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
 
             Legend l = mChart.getLegend();
             l.setEnabled(true);
+            l.setTextSize(17f);
 
             mChart.getDescription().setEnabled(false);
             mChart.setData(pieData);
