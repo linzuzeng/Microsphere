@@ -48,7 +48,7 @@ install:
 script:
      - ./gradlew assembleRelease
 before_deploy:
-     - cp ./app/build/outputs/apk/*.apk
+     - cp ./app/build/outputs/apk/*.apk .
 deploy:
   provider: releases
   api_key: 
