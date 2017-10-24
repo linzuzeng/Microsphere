@@ -21,20 +21,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
@@ -274,11 +267,12 @@ public class MainActivity extends AppCompatActivity {
 
             pieData.setDrawValues(true);
             pieData.setValueTextColor(Color.BLUE);
-            pieData.setValueTextSize(12f);
-            //pieData.setValueTypeface(mTfLight);
+            pieData.setValueTextSize(20f);
+
             pieData.setValueFormatter(new PercentFormatter());
 
-
+            mChart.setEntryLabelColor(Color.BLACK);
+            mChart.setEntryLabelTextSize(22f);
 
             mChart.setDrawHoleEnabled(true);
             mChart.setHoleRadius(40f);
@@ -289,8 +283,8 @@ public class MainActivity extends AppCompatActivity {
             mChart.setDrawCenterText(true);
 
             mChart.setCenterText("Detection result");
-            mChart.setCenterTextSize(13f);
-            mChart.setCenterTextColor(Color.RED);
+            mChart.setCenterTextSize(14f);
+            mChart.setCenterTextColor(Color.BLACK);
 
             mChart.setUsePercentValues(true);
             mChart.setDrawEntryLabels(true);
