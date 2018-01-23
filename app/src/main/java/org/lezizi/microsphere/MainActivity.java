@@ -99,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void get_permission() {
-        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) !=
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
             return;
         }
     }
@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
         File f = new File(path);
         if (!f.isDirectory()) {
             f.mkdirs();
+            add_log("copy assets...");
             copyAssets(path); //getExternalFilesDir(null)
         }
         // create output folder
