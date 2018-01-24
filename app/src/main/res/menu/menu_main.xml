@@ -3,7 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="org.lezizi.microsphere.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/mode_maa"
+        android:orderInCategory="100"
+        android:title="@string/action_maa"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mode_pmd"
+        android:orderInCategory="100"
+        android:title="@string/action_pmd"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mode_about"
         android:orderInCategory="100"
         android:title="@string/action_about"
         app:showAsAction="never" />

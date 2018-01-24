@@ -21,8 +21,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.PieChart;
-
 import com.yanzhenjie.album.Action;
 import com.yanzhenjie.album.Album;
 import com.yanzhenjie.album.AlbumFile;
@@ -212,17 +210,40 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+    public int detection_mode = 0;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        detection_mode = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (detection_mode == R.id.mode_about) {
+            getSupportActionBar().setTitle(getString(R.string.app_name));
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setVisibility(View.INVISIBLE);
+            TextView tv = (TextView) findViewById(R.id.sample_text);
+            tv.setText(getString(R.string.action_about));
             add_log(stringFromJNI());
+            return true;
+        }
+        if (detection_mode == R.id.mode_maa) {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setVisibility(View.VISIBLE);
+            getSupportActionBar().setTitle(getString(R.string.action_maa));
+            Snackbar.make(findViewById(android.R.id.content), "Mode: "+getString(R.string.action_maa), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return true;
+
+        }
+        if (detection_mode == R.id.mode_pmd) {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setVisibility(View.VISIBLE);
+            getSupportActionBar().setTitle(getString(R.string.action_pmd));
+            Snackbar.make(findViewById(android.R.id.content), "Mode: "+getString(R.string.action_pmd), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
             return true;
 
         }

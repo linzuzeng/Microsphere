@@ -28,8 +28,6 @@ public class MAAResult extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-
-      
         PieChart mChart = (PieChart) findViewById(R.id.result_text);
         mChart.setVisibility(View.VISIBLE);
 

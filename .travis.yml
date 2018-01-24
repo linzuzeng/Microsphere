@@ -44,14 +44,13 @@ install:
 script:
      - ./gradlew assemble
 before_deploy:
-     - cp ./app/build/outputs/apk/*.apk .
+     - cp ./app/build/outputs/apk/debug/*.apk .
 deploy:
   provider: releases
   api_key: 
     secure: "Ep9lbrfDoZYfjEkIL5etZWOPcvz1b1fqO/8ECZarYPGNtjsDRRMs8C8c756pvddsjv2KDbFhHVS6U+YSvkqd6J/hkWDJiUNU4f6qcncJ7AT6SZ80ZgaNtvB5PP9FKvNQeIJp78zvhf61h0DttI+sf/+xX6SvyNQCblOOmsxf4Td1o9fo6Upm/Fv3VK9EhllzVPfndTX+ulUNXFQ+3FBEaQb/ITrhZvIPL09hHBACBA7+HTpc9BReFs6RCeIk1BWQWr3h6PPD1dnz95HnIYrVVScDTimwAdbl2Iih7RutLJ8NA0x7fVbeeeU9g1ocpGkOaI0KZct7JTSF5COo5ou1I/O24gMc2lgAhYtFJQRf26YZyCjD2woU6+83qQBhdKxlvulcQlI8JYqfG97cJt5yfIlT9gDkLD6hX+XBFsqJAwV/AxXk1wM2ZieVWO64ZjfB3ghDYoXx+jUFDl4xpcn73PYTFzrbi2If0TSLjqfzzbYWLq0F/FrGqr5cm8/kQjSNHUoKnv7y9DTKpZDaYJqWGtctg8N1qj7DEutX09uyGyR3ef90sza7P5Djtmw69HMKSeFZMXB2zKZtC4jp2I/uiqvH7YlVRrEaN0s/j+7K2ULuEOdLlXMZGWV16hw3jdqKktMXCk37bU9dICPrsWKJns//wFXjMDIwEfjqjiNUQhI="
   file: 
     - "app-debug.apk"
-    - "app-release-unsigned.apk"
   skip_cleanup: true
   on:
     tags: true
