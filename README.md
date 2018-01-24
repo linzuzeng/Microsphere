@@ -1,8 +1,8 @@
 Microsphere
 ===============
-[![Build Status](https://travis-ci.org/linzuzeng/Microsphere.svg?branch=master)](https://travis-ci.org/linzuzeng/Microsphere)
+[![Build Status](https://travis-ci.org/tjumbios/Microsphere.svg?branch=master)](https://travis-ci.org/tjumbios/Microsphere)
 [![Platform](https://img.shields.io/badge/platform-Android-green.svg)](https://www.android.com)
-[![License](https://img.shields.io/github/license/linzuzeng/Microsphere.svg)](https://github.com/linzuzeng/Microsphere/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/tjumbios/Microsphere.svg)](https://github.com/tjumbios/Microsphere/blob/master/LICENSE)
 
 A simple microsphere detector that runs on Android.
 
