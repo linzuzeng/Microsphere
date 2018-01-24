@@ -9,7 +9,7 @@ Microsphere toolkit for Android.
 Copyright (C) 2017 Zuzeng Lin
 
 
-Single bead / dimer Detection
+Microbead Aggregation Assay
 ---------
 [![Demonstration video on youtube](https://img.youtube.com/vi/RfW5BJC2Gps/0.jpg)](https://www.youtube.com/watch?v=RfW5BJC2Gps)
 
