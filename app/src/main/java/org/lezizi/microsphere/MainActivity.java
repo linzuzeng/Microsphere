@@ -29,6 +29,10 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import com.yanzhenjie.album.Action;
+import com.yanzhenjie.album.Album;
+import com.yanzhenjie.album.AlbumFile;
+
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -83,6 +87,25 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            	 Album.image(MainActivity.this) // Image selection.
+                        .singleChoice()
+                        .requestCode(0)
+                        .camera(true)
+                        .columnCount(3)
+                        .onResult(new Action<ArrayList<AlbumFile>>() {
+                            @Override
+                            public void onAction(int requestCode, @NonNull ArrayList<AlbumFile> result) {
+                                for (AlbumFile file: result){
+                                    add_log(file.toString());
+                                }
+                            }
+                        })
+                        .onCancel(new Action<String>() {
+                            @Override
+                            public void onAction(int requestCode, @NonNull String result) {
+                            }
+                        })
+                        .start();
                 new DetectionTask().execute(path);
             }
         });
