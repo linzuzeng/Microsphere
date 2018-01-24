@@ -26,3 +26,10 @@ Copyright (C) 2017 Google Inc. all rights reserved.
 
 MPAndroidChart
 Copyright (C) 2016 Philipp Jahoda
+
+Paper
+--------
+
+Cellphone-Enabled Microwell-based Microbead Aggregation Assay for Portable Biomarker Detection
+Weiwei Cui, Meihang He, Luye Mu, Zuzeng Lin, Yanyan Wang, Wei Pang, Mark A. Reed, and Xuexin Duan
+http://pubs.acs.org/doi/abs/10.1021/acssensors.7b00866
