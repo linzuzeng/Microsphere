@@ -1,9 +1,9 @@
 package org.lezizi.microsphere;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,12 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import com.yanzhenjie.album.Action;
 import com.yanzhenjie.album.Album;
@@ -51,9 +45,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String MAAResult_Dimers = "org.lezizi.microsphere.MAAResult_Dimers";
+    public static final String MAAResult_SingleBeads = "org.lezizi.microsphere.MAAResult_SingleBeads";
 
     private static final String TAG = "MainActivity";
     private static String path = Environment.getExternalStorageDirectory().toString() + "/Microsphere/";
@@ -98,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                                 for (AlbumFile file: result){
                                     add_log(file.toString());
                                 }
+                                new DetectionTask().execute(path);
                             }
                         })
                         .onCancel(new Action<String>() {
@@ -106,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         })
                         .start();
-                new DetectionTask().execute(path);
+
             }
         });
         add_log(stringFromJNI());
@@ -258,8 +254,8 @@ public class MainActivity extends AppCompatActivity {
             fab.setVisibility(View.INVISIBLE);
             ProgressBar prg = (ProgressBar) findViewById(R.id.progressBar1);
             prg.setVisibility(View.VISIBLE);
-            PieChart rtv = (PieChart) findViewById(R.id.result_text);
-            rtv.setVisibility(View.INVISIBLE);
+
+
             Snackbar.make(findViewById(android.R.id.content), "Starting detection... ", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
@@ -271,57 +267,18 @@ public class MainActivity extends AppCompatActivity {
             ProgressBar prg = (ProgressBar) findViewById(R.id.progressBar1);
             prg.setVisibility(View.INVISIBLE);
             //TextView rtv = (TextView) findViewById(R.id.result_text);
-            PieChart mChart = (PieChart) findViewById(R.id.result_text);
-            mChart.setVisibility(View.VISIBLE);
 
+            Snackbar.make(findViewById(android.R.id.content), "Detection finished. ", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
             add_log("Generating report...");
             String report= String.format("Report \n\n Single beads: %, 5d \n Dimers: %, 17d \n \n Percentage of dimer: %2.2f %%",total_single_count,total_double_count,(double)total_double_count*100.0/((double)total_double_count+(double)total_single_count)+Math.ulp(1.0));
             //rtv.setText(report);
             add_log(report);
 
-
-
-            List<PieEntry> entries_double = new ArrayList<>();
-            entries_double.add(new PieEntry(total_single_count,"Single beads"));
-            entries_double.add(new PieEntry(total_double_count,"Dimers"));
-            PieDataSet dataset_double = new PieDataSet(entries_double, "");
-
-            dataset_double.setColors(ColorTemplate.MATERIAL_COLORS);
-            PieData pieData = new PieData(dataset_double);
-
-            pieData.setDrawValues(true);
-            pieData.setValueTextColor(Color.BLUE);
-            pieData.setValueTextSize(20f);
-
-            pieData.setValueFormatter(new PercentFormatter());
-
-            mChart.setEntryLabelColor(Color.BLACK);
-            mChart.setEntryLabelTextSize(22f);
-
-            mChart.setDrawHoleEnabled(true);
-            mChart.setHoleRadius(40f);
-            mChart.setTransparentCircleRadius(48f);
-            mChart.setTransparentCircleColor(Color.BLACK);
-            mChart.setTransparentCircleAlpha(50);
-            mChart.setHoleColor(Color.WHITE);
-            mChart.setDrawCenterText(true);
-
-            mChart.setCenterText("Detection result");
-            mChart.setCenterTextSize(17f);
-            mChart.setCenterTextColor(Color.BLACK);
-
-            mChart.setUsePercentValues(true);
-            mChart.setDrawEntryLabels(true);
-
-            Legend l = mChart.getLegend();
-            l.setEnabled(true);
-            l.setTextSize(17f);
-
-            mChart.getDescription().setEnabled(false);
-            mChart.setData(pieData);
-            mChart.invalidate();
-            Snackbar.make(findViewById(android.R.id.content), "Detection finished. ", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Intent intent = new Intent(MainActivity.this, MAAResult.class);
+            intent.putExtra(MAAResult_SingleBeads, total_single_count);
+            intent.putExtra(MAAResult_Dimers, total_single_count);
+            startActivity(intent);
         }
 
         private void process_directory(String path) {
