@@ -1,5 +1,6 @@
 *.iml
 .gradle
+.idea
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
@@ -8,4 +9,4 @@
 /captures
 .externalNativeBuild
 /OpenCV-android-sdk
-/openCVLibrary330/build
+/openCVLibrary330/build/*
