@@ -47,9 +47,11 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     public static final String MAAResult_Dimers = "org.lezizi.microsphere.MAAResult_Dimers";
     public static final String MAAResult_SingleBeads = "org.lezizi.microsphere.MAAResult_SingleBeads";
+    public static final String PMDActivity_Filename = "org.lezizi.microsphere.PMDActivity_Filename";
+
+    public static String app_mainpath = Environment.getExternalStorageDirectory().toString() + "/Microsphere/";
 
     private static final String TAG = "MainActivity";
-    private static String path = Environment.getExternalStorageDirectory().toString() + "/Microsphere/";
     private static Net net;
     private static int total_single_count;
     private  static int total_double_count;
@@ -75,39 +77,51 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        // set textview
+        add_log(stringFromJNI());
+        TextView tv = (TextView) findViewById(R.id.sample_text);
+        tv.setMovementMethod(new ScrollingMovementMethod());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	 Album.image(MainActivity.this) // Image selection.
-                        .singleChoice()
-                        .requestCode(0)
-                        .camera(true)
-                        .columnCount(3)
-                        .onResult(new Action<ArrayList<AlbumFile>>() {
-                            @Override
-                            public void onAction(int requestCode, @NonNull ArrayList<AlbumFile> result) {
-                                for (AlbumFile file: result){
-                                    add_log(file.toString());
+
+                if (detection_mode == R.id.mode_maa)
+                    new MAADetectionTask().execute(app_mainpath);
+                else{
+                    Album.image(MainActivity.this) // Image selection.
+                            .singleChoice()
+                            .requestCode(0)
+                            .camera(true)
+                            .columnCount(3)
+                            .onResult(new Action<ArrayList<AlbumFile>>() {
+                                @Override
+                                public void onAction(int requestCode, @NonNull ArrayList<AlbumFile> result) {
+                                    for (AlbumFile file: result){
+                                        add_log("PMD: "+file.getPath());
+                                        Intent intent = new Intent(MainActivity.this, PMDActivity.class);
+                                        intent.putExtra(PMDActivity_Filename, file.getPath());
+
+                                        startActivity(intent);
+                                    }
+
                                 }
-                                new DetectionTask().execute(path);
-                            }
-                        })
-                        .onCancel(new Action<String>() {
-                            @Override
-                            public void onAction(int requestCode, @NonNull String result) {
-                            }
-                        })
-                        .start();
+                            })
+                            .onCancel(new Action<String>() {
+                                @Override
+                                public void onAction(int requestCode, @NonNull String result) {
+                                }
+                            })
+                            .start();
+                }
+
 
             }
         });
-        add_log(stringFromJNI());
-        TextView tv = (TextView) findViewById(R.id.sample_text);
-        tv.setMovementMethod(new ScrollingMovementMethod());
+
         get_permission();
-        init_system();
+        init_filesystem();
     }
 
     public void add_log(String line) {
@@ -130,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_WRITE_STORAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 add_log("Permission granted. ");
-                init_system();
+                init_filesystem();
             } else {
                 add_log("ERROR: No permission to read external storage. ");
             }
@@ -182,22 +196,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void init_system() {
-        File f = new File(path);
+    private void init_filesystem() {
+        File f = new File(app_mainpath);
         if (!f.isDirectory()) {
             f.mkdirs();
             add_log("copy assets...");
-            copyAssets(path); //getExternalFilesDir(null)
+            copyAssets(app_mainpath); //getExternalFilesDir(null)
         }
         // create output folder
-        f = new File(path + "output");
+        f = new File(app_mainpath + "output");
         if (!f.isDirectory()) {
             f.mkdirs();
         }
-        add_log("Path: " + path);
+        add_log("Path: " + app_mainpath);
         try {
-            net = Dnn.readNetFromTensorflow(path + "graph.pb");
-            add_log("Model: " + path + "graph.pb");
+            net = Dnn.readNetFromTensorflow(app_mainpath + "graph.pb");
+            add_log("Model: " + app_mainpath + "graph.pb");
         } catch (Exception e) {
             add_log("ERROR: unable to load model, this app might not work correctly.");
         }
@@ -256,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public native String stringFromJNI();
 
-    private class DetectionTask extends AsyncTask<String, String, String> {
+    private class MAADetectionTask extends AsyncTask<String, String, String> {
 
         @Override
         protected String doInBackground(String... strings) {
@@ -295,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
             String report= String.format("Report \n\n Single beads: %, 5d \n Dimers: %, 17d \n \n Percentage of dimer: %2.2f %%",total_single_count,total_double_count,(double)total_double_count*100.0/((double)total_double_count+(double)total_single_count)+Math.ulp(1.0));
             //rtv.setText(report);
             add_log(report);
-
+            //start MAAResult Activity
             Intent intent = new Intent(MainActivity.this, MAAResult.class);
             intent.putExtra(MAAResult_SingleBeads, total_single_count);
             intent.putExtra(MAAResult_Dimers, total_single_count);

@@ -3,11 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Microsphere.iml" filepath="$PROJECT_DIR$/Microsphere.iml" />
-      <module fileurl="file://C:\Users\zuzeng\Documents\Research DATA\AndroidStudioProjects\Microsphere\Microsphere.iml" filepath="C:\Users\zuzeng\Documents\Research DATA\AndroidStudioProjects\Microsphere\Microsphere.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\zuzeng\Documents\Research DATA\AndroidStudioProjects\Microsphere\app\app.iml" filepath="C:\Users\zuzeng\Documents\Research DATA\AndroidStudioProjects\Microsphere\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/openCVLibrary330/openCVLibrary330.iml" filepath="$PROJECT_DIR$/openCVLibrary330/openCVLibrary330.iml" />
-      <module fileurl="file://C:\Users\zuzeng\Documents\Research DATA\AndroidStudioProjects\Microsphere\openCVLibrary330\openCVLibrary330.iml" filepath="C:\Users\zuzeng\Documents\Research DATA\AndroidStudioProjects\Microsphere\openCVLibrary330\openCVLibrary330.iml" />
     </modules>
   </component>
 </project>
