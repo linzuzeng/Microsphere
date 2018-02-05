@@ -2,15 +2,25 @@ package org.lezizi.microsphere;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
@@ -22,21 +32,24 @@ import org.opencv.features2d.Features2d;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class PMDActivity extends AppCompatActivity {
     protected MatOfKeyPoint keypoints;
     protected Mat cimg;
     protected Mat resized;
+    protected float barValue1;
+    protected float barValue2;
+    protected float barValue3;
     protected void update_preview(){
         SeekBar  bar1 =  findViewById(R.id.seekBar1);
         SeekBar  bar2 =  findViewById(R.id.seekBar2);
         SeekBar  bar3 =  findViewById(R.id.seekBar3);
-        float barValue1 = bar1.getProgress()/(float)100.0;
-        float barValue2 = bar2.getProgress()/(float)100.0;
-        float barValue3 = bar3.getProgress()/(float)100.0;
+        barValue1 = bar1.getProgress()/(float)100.0;
+        barValue2 = bar2.getProgress()/(float)100.0;
+        barValue3 = bar3.getProgress()/(float)100.0;
         TextView result= findViewById(R.id.textView2);
 
         Mat out=new Mat(cimg.rows()/4, cimg.cols()/4, CvType.CV_64FC3);
@@ -57,7 +70,7 @@ public class PMDActivity extends AppCompatActivity {
             }
         }
 
-        result.setText(String.format("(%.2f pix<d)=%d; (%.2f pix< d <%.2f pix)=%d; (%.2f pix< d <%.2f pix)=%d;",
+        result.setText(String.format("(d<%.2f)=%d  (%.2f<d<%.2f)=%d (%.2f<d<%.2f)=%d",
                 barValue1,
                 samll_list.size(),
                 barValue1,
@@ -91,6 +104,107 @@ public class PMDActivity extends AppCompatActivity {
         ImageView iv = findViewById(R.id.imageView1);
         iv.setImageBitmap(bm);
     }
+    protected void draw_histogram(){
+        final int bin_num=50;
+        SeekBar bar1 =  findViewById(R.id.seekBar1);
+        float bin_step= (bar1.getMax()/(float)100.0)/(float)bin_num;
+        int histogram[] = new int[bin_num];
+        for (KeyPoint vkp :  keypoints.toList())
+        {
+            int i = (int)(vkp.size/bin_step);
+            if (i>=bin_num) i = bin_num-1;
+            if (i<=0) i=0;
+            histogram[i]+=1;
+        }
+
+        LineChart mChart =  findViewById(R.id.result_barchart);
+
+        ArrayList<Entry> BARENTRY1= new ArrayList<>();
+        ArrayList<Entry> BARENTRY2= new ArrayList<>();
+        ArrayList<Entry> BARENTRY3= new ArrayList<>();
+        ArrayList<Entry> BARENTRY4= new ArrayList<>();
+        for (int i=0;i<bin_num;i++){
+            float size = (float)i*bin_step;
+            if (i<=(int)(barValue1/bin_step)){
+                BARENTRY1.add(new Entry(size,histogram[i]));
+            }
+            if ((int)(barValue1/bin_step)<=i && i<=(int)(barValue2/bin_step)){
+                BARENTRY2.add(new Entry(size,histogram[i]));
+            }
+            if ((int)(barValue2/bin_step)<=i && i<=(int)(barValue3/bin_step)){
+                BARENTRY3.add(new Entry(size,histogram[i]));
+            }
+            if (i>=(int)(barValue3/bin_step)){
+                BARENTRY4.add(new Entry(size,histogram[i]));
+            }
+        }
+        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        if (BARENTRY1.size()>0){
+            LineDataSet DS1=new LineDataSet(BARENTRY1, String.format("(d <%.1f)",barValue1));
+            DS1.setFillColor(getResources().getColor(R.color.chart_color1));
+            DS1.setColor(getResources().getColor(R.color.chart_color1));
+            DS1.setDrawCircles(false);
+            DS1.setDrawValues(false);
+            DS1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            DS1.setDrawFilled(true);
+            dataSets.add( DS1);
+        }
+
+        if (BARENTRY2.size()>0){
+            LineDataSet DS1= new LineDataSet(BARENTRY2, String.format("(%.1f< d <%.1f)",barValue1,barValue2));
+            DS1.setFillColor(getResources().getColor(R.color.chart_color2));
+            DS1.setColor(getResources().getColor(R.color.chart_color2));
+            DS1.setDrawCircles(false);
+            DS1.setDrawValues(false);
+            DS1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            DS1.setDrawFilled(true);
+            dataSets.add( DS1);
+        }
+
+        if (BARENTRY3.size()>0){
+            LineDataSet DS1=new LineDataSet(BARENTRY3, String.format("(%.1f< d <%.1f)",barValue2,barValue3));
+            DS1.setFillColor(getResources().getColor(R.color.chart_color3));
+            DS1.setColor(getResources().getColor(R.color.chart_color3));
+            DS1.setDrawCircles(false);
+            DS1.setDrawValues(false);
+            DS1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            DS1.setDrawFilled(true);
+            dataSets.add( DS1);
+        }
+
+        if (BARENTRY4.size()>0){
+            LineDataSet DS1=new LineDataSet(BARENTRY4, String.format("(%.1f< d)",barValue3));
+            DS1.setFillColor(getResources().getColor(R.color.chart_color4));
+            DS1.setColor(getResources().getColor(R.color.chart_color4));
+            DS1.setDrawCircles(false);
+            DS1.setDrawValues(false);
+            DS1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            DS1.setDrawFilled(true);
+            dataSets.add( DS1);
+        }
+
+
+        LineData BARDATA = new LineData( dataSets);
+        XAxis xAxis = mChart.getXAxis();
+
+        xAxis.setDrawAxisLine(false);
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setAxisMinimum(0);
+        YAxis rightAxis = mChart.getAxisRight();
+        rightAxis.setAxisMinimum(0);
+        rightAxis.setDrawAxisLine(false);
+        rightAxis.setDrawLabels(false);
+
+        mChart.setMinOffset(0);
+        mChart.setData(BARDATA);
+        mChart.getDescription().setText("Diameter");
+       // mChart.getDescription().setYOffset(-25);
+
+        mChart.invalidate();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,11 +234,13 @@ public class PMDActivity extends AppCompatActivity {
         SeekBar  bar1 =  findViewById(R.id.seekBar1);
         SeekBar  bar2 =  findViewById(R.id.seekBar2);
         SeekBar  bar3 =  findViewById(R.id.seekBar3);
+
         bar1.setMax((int)(max_size*100.0));
         bar2.setMax((int)(max_size*100.0));
         bar3.setMax((int)(max_size*100.0));
-
-
+        bar1.setProgress((int)(max_size*30.0));
+        bar2.setProgress((int)(max_size*60.0));
+        bar3.setProgress((int)(max_size*90.0));
         SeekBar.OnSeekBarChangeListener listener=new SeekBar.OnSeekBarChangeListener(){
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -150,6 +266,20 @@ public class PMDActivity extends AppCompatActivity {
         bar3.setOnSeekBarChangeListener(listener);
 
         update_preview();
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LinearLayout result_barchart = findViewById(R.id.result_layout);
+                if (result_barchart.getVisibility()==View.VISIBLE) {
+                    result_barchart.setVisibility(View.INVISIBLE);
+                }else{
+                    result_barchart.setVisibility(View.VISIBLE);
+                    draw_histogram();
+                }
+            }
+        });
     }
 
 }

@@ -6,5 +6,10 @@
     <color name="colorPrimaryBlack">#FF2B2B2B</color>
 
     <color name="colorWhite">#FFF</color>
+
     <color name="colorFont">#333</color>
+    <color name="chart_color1">#32e413</color>
+    <color name="chart_color2">#1781e4</color>
+    <color name="chart_color3">#ae09f4</color>
+    <color name="chart_color4">#d91414</color>
 </resources>

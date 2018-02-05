@@ -38,6 +38,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -86,9 +87,34 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (detection_mode == R.id.mode_maa)
-                    new MAADetectionTask().execute(app_mainpath);
+                {
+                    Album.image(MainActivity.this) // Image selection.
+                            .multipleChoice()
+                            .requestCode(0)
+                            .camera(true)
+                            .columnCount(3)
+                            .onResult(new Action<ArrayList<AlbumFile>>() {
+                                @Override
+                                public void onAction(int requestCode, @NonNull ArrayList<AlbumFile> result) {
+                                    for (AlbumFile file: result){
+                                        try {
+                                            copyFile(new FileInputStream(new File(file.getPath())), new FileOutputStream(new File(app_mainpath,file.getName())));
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    new MAADetectionTask().execute(app_mainpath);
+                                }
+                            })
+                            .onCancel(new Action<String>() {
+                                @Override
+                                public void onAction(int requestCode, @NonNull String result) {
+                                    new MAADetectionTask().execute(app_mainpath);
+                                }
+                            })
+                            .start();
+                }
                 else{
                     Album.image(MainActivity.this) // Image selection.
                             .singleChoice()
@@ -102,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                                         add_log("PMD: "+file.getPath());
                                         Intent intent = new Intent(MainActivity.this, PMDActivity.class);
                                         intent.putExtra(PMDActivity_Filename, file.getPath());
-
                                         startActivity(intent);
                                     }
 
@@ -378,8 +403,13 @@ public class MainActivity extends AppCompatActivity {
             try {
                 cimg = Imgcodecs.imread(filename);
                 Imgproc.cvtColor(cimg, img, Imgproc.COLOR_RGBA2GRAY);
+
             } catch (Exception e) {
                 publishProgress("ERROR: File contains an unsupported image format. ");
+                return;
+            }
+            if (cimg.cols()>3000){
+                publishProgress("ERROR: Image resolution is too high. ");
                 return;
             }
             Mat th3 = new Mat();
